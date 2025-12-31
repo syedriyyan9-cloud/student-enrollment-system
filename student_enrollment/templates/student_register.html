@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        
+        .registration-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #3f51b5;
+            margin-bottom: 20px;
+        }
+        
+        .form-group { 
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #3f51b5;
+            box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.2);
+        }
+        
+        button {
+            background-color: #3f51b5;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #354497;
+        }
+        
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="registration-container">
+        <h1>Student Registration</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="s_fname">First Name:</label>
+                <input type="text" id="s_fname" name="s_fname" maxlength="30" required>
+            </div>
+
+            <div class="form-group">
+                <label for="s_lname">Last Name:</label>
+                <input type="text" id="s_lname" name="s_lname" maxlength="30" required>
+            </div>
+
+            <div class="form-group">
+                <label for="s_email">Email:</label>
+                <input type="email" id="s_email" name="s_email" maxlength="150" required>
+            </div>
+
+            <div class="form-group">
+                <label for="s_phone">Phone Number:</label>
+                <input type="number" id="s_phone" name="s_phone" required>
+            </div>
+
+            <div class="form-group">
+                <label for="s_dob">Date of Birth:</label>
+                <input type="date" id="s_dob" name="s_dob" required>
+            </div>
+
+            <div class="form-group">
+                <label for="s_city">City:</label>
+                <input type="text" id="s_city" name="s_city" maxlength="50" required>
+            </div>
+
+            <div class="form-group">
+                <label for="s_password">Password:</label>
+                <input type="password" id="s_password" name="s_password" maxlength="20" required>
+            </div>
+
+            <div class="form-group">
+                <label for="s_image">Profile Picture:</label>
+                <input type="file" id="s_image" name="s_image" accept="image/*">
+            </div>
+
+            <div class="form-group">
+                <label for="s_document">Document:</label>
+                <input type="file" id="s_document" name="s_document">
+            </div>
+
+            <div class="form-group">
+                <label for="s_bio">Bio:</label>
+                <textarea id="s_bio" name="s_bio" rows="4"></textarea>
+            </div>
+
+            <button type="submit">Register</button>
+        </form>
+    </div>
+
+    <script>
+        // Basic visual enhancements only
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add focus styling to form elements
+            const inputs = document.querySelectorAll('input, textarea, select');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.style.borderColor = '#3f51b5';
+                    this.style.boxShadow = '0 0 0 2px rgba(63, 81, 181, 0.2)';
+                });
+                input.addEventListener('blur', function() {
+                    this.style.boxShadow = 'none';
+                });
+            });
+            
+            // Simple password visibility toggle (visual only)
+            const passwordInput = document.getElementById('s_password');
+            if(passwordInput) {
+                passwordInput.style.position = 'relative';
+                passwordInput.style.paddingRight = '40px';
+                
+                const toggle = document.createElement('span');
+                toggle.innerHTML = '👁️';
+                toggle.style.position = 'absolute';
+                toggle.style.right = '10px';
+                toggle.style.top = '50%';
+                toggle.style.transform = 'translateY(-50%)';
+                toggle.style.cursor = 'pointer';
+                
+                passwordInput.parentNode.style.position = 'relative';
+                passwordInput.parentNode.appendChild(toggle);
+                
+                toggle.addEventListener('click', function() {
+                    if(passwordInput.type === 'password') {
+                        passwordInput.type = 'text';
+                        toggle.innerHTML = '👁️';
+                    } else {
+                        passwordInput.type = 'password';
+                        toggle.innerHTML = '👁️';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

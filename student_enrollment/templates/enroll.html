@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Course Enrollment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #3f51b5;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .enroll-form {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 6px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        button {
+            background-color: #3f51b5;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .search-box {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f0f4ff;
+            border-radius: 6px;
+        }
+        
+        #courseSearch {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .course-list {
+            margin-top: 10px;
+        }
+        
+        .course-item {
+            padding: 15px;
+            border: 1px solid #eee;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .course-item:hover {
+            background-color: #f5f5ff;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .course-code {
+            font-weight: bold;
+            color: #3f51b5;
+            margin-bottom: 5px;
+        }
+        
+        .course-name {
+            margin-bottom: 5px;
+        }
+        
+        .course-details {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Course Enrollment</h1>
+        
+        <div class="enroll-form">
+            <form method="post" action="{% url 'enroll' %}">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label>Student Email: {{ user.s_email }}</label>
+                    <input type="hidden" name="s_email" value="{{ user.s_email }}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="c_number">Course Number</label>
+                    <input type="text" id="c_number" name="c_number" required>
+                </div>
+                
+                <button type="submit">Enroll Now</button>
+            </form>
+        </div>
+        
+        <div class="search-box">
+            <h2>Available Courses</h2>
+            <p>Search courses and click "Copy" to fill the course number automatically</p>
+            <input type="text" id="courseSearch" placeholder="Search courses by name or code...">
+        </div>
+        
+        <div class="course-list" id="courseList">
+            {% for course in courses %}
+            <div class="course-item" data-search="{{ course.c_number }} {{ course.c_name }} {{ course.c_teacher }}">
+                <div class="course-code">{{ course.c_number }}</div>
+                <div class="course-name">{{ course.c_name }}</div>
+                <div class="course-details">
+                    Teacher: {{ course.c_teacher }} | Credits: {{ course.c_credit }}
+                </div>
+                <button onclick="document.getElementById('c_number').value = '{{ course.c_number }}'" 
+                        style="width: auto; padding: 5px 10px; margin-top: 10px; font-size: 14px;">
+                    Copy Course Number
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('courseSearch').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const courses = document.querySelectorAll('.course-item');
+            let hasResults = false;
+            
+            courses.forEach(course => {
+                const searchText = course.getAttribute('data-search').toLowerCase();
+                if (searchText.includes(searchTerm)) {
+                    course.style.display = 'block';
+                    hasResults = true;
+                } else {
+                    course.style.display = 'none';
+                }
+            });
+            
+            // Show "no results" message if needed
+            if (!hasResults) {
+                const noResults = document.createElement('div');
+                noResults.className = 'no-results';
+                noResults.textContent = 'No courses match your search';
+                
+                const courseList = document.getElementById('courseList');
+                if (!document.querySelector('.no-results')) {
+                    courseList.appendChild(noResults);
+                }
+            } else {
+                const existingMessage = document.querySelector('.no-results');
+                if (existingMessage) {
+                    existingMessage.remove();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

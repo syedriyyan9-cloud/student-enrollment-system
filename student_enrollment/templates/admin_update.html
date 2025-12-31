@@ -1,0 +1,108 @@
+<!-- update_student.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Student</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #3f51b5;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .error {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .btn {
+            background-color: #3f51b5;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background-color: #354497;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Update Student</h1>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="s_fname">First Name</label>
+                <input type="text" id="s_fname" name="s_fname" value="{{ student.s_fname }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="s_lname">Last Name</label>
+                <input type="text" id="s_lname" name="s_lname" value="{{ student.s_lname }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="s_email">Email</label>
+                <input type="email" id="s_email" name="s_email" value="{{ student.s_email }}" required>
+                {% if email_error %}
+                <div class="error">{{ email_error }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="s_phone">Phone Number</label>
+                <input type="text" id="s_phone" name="s_phone" value="{{ student.s_phone }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="s_city">City</label>
+                <input type="text" id="s_city" name="s_city" value="{{ student.s_city }}" required>
+            </div>
+            
+            <button type="submit" class="btn">Update Student</button>
+        </form>
+    </div>
+</body>
+</html>

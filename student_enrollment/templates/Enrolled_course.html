@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Dashboard</title>
+    <style>
+        :root {
+            --primary-color: #3f51b5;
+            --sidebar-bg: #2c3e50;
+            --sidebar-text: #ecf0f1;
+            --success-color: #4caf50;
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            padding: 25px 0;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .profile-section {
+            text-align: center;
+            padding: 0 25px 25px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary-color);
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .profile-name {
+            margin: 10px 0 5px;
+            font-size: 1.3rem;
+        }
+        
+        .profile-email {
+            color: #bdc3c7;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        
+        .photo-upload {
+            display: block;
+            width: 100%;
+        }
+        
+        .photo-upload label {
+            display: block;
+            background: var(--primary-color);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .photo-upload label:hover {
+            background: #354497;
+        }
+        
+        .nav-menu {
+            padding: 0 15px;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            color: var(--sidebar-text);
+            text-decoration: none;
+            padding: 12px 20px;
+            margin: 5px 0;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .nav-link i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 30px;
+        }
+        
+        .page-header {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+        }
+        
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .course-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .course-header {
+            background: linear-gradient(135deg, var(--primary-color), #5c6bc0);
+            color: white;
+            padding: 20px;
+        }
+        
+        .course-name {
+            font-size: 1.2rem;
+            margin: 0;
+            display: inline-block;
+        }
+        
+        .course-number {
+            float: right;
+            background: rgba(255,255,255,0.2);
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .course-body {
+            padding: 20px;
+        }
+        
+        .course-description {
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .badges-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .teacher-badge {
+            background: #2196f3;
+            color: white;
+        }
+        
+        .credit-badge {
+            background: var(--success-color);
+            color: white;
+        }
+        
+        .status-badge {
+            background: #777;
+            color: white;
+        }
+        
+        .details-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .details-link:hover {
+            text-decoration: underline;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .empty-state a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .empty-state a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="profile-section">
+            <img src="{{ user.s_image.url|default:'/media/default_profile.png' }}" 
+                 alt="Profile" class="profile-img">
+            <h3 class="profile-name">{{ user.s_fname }} {{ user.s_lname }}</h3>
+            <!-- <p class="profile-email">{{ user.s_email }}</p> -->
+            <p class="profile-email">{{ user.s_bio }}</p>
+            
+            <div class="photo-upload">
+                <form method="post" enctype="multipart/form-data" action="#">
+                    {% csrf_token %}
+                    <input type="file" name="s_image" id="profilePicInput" accept="image/*" style="display: none;">
+                    <label for="profilePicInput">Change Profile Photo</label>
+                </form>
+            </div>
+        </div>
+        
+        <div class="nav-menu">
+            <a href="{% url 'dashboard' %}" class="nav-link active">
+                <span>All Courses</span>
+            </a>
+            <a href="{% url 'accepted' %}" class="nav-link">
+                <span>Accepted Courses</span>
+            </a>
+            <a href="{% url 'rejected' %}" class="nav-link">
+                <span>Rejected Courses</span>
+            </a>
+            <a href="{% url 'document' %}" class="nav-link">
+                <span>Documents</span>
+            </a>
+            <a href="{% url 'logout' %}" class="nav-link">
+                <span>Logout</span>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1 class="page-header">My Enrolled Courses</h1>
+        
+        {% if enrolled_courses %}
+            <div class="courses-grid">
+                {% for i in enrolled_courses %}
+                <div class="course-card">
+                    <div class="course-header">
+                        <h3 class="course-name">{{ i.course.c_name }}</h3>
+                        <span class="course-number">#{{ i.course.c_number }}</span>
+                    </div>
+                    <div class="course-body">
+                        <p class="course-description">{{ i.course.c_des }}</p>
+                        <div class="badges-container">
+                            <span class="badge teacher-badge">Teacher: {{ i.course.c_teacher }}</span>
+                            <span class="badge credit-badge">{{ i.course.c_credit }} Credits</span>
+                        </div>
+                        <span class="badge status-badge">Status: {{ i.get_status_display }}</span>
+                        <b> <span style="color: green;">&nbsp; &nbsp; Accepted</span> </b>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <p>You are not enrolled in any courses yet.</p>
+                <p><a href="{% url 'course' %}">Browse available courses</a> to enroll.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Simple visual enhancements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Photo upload preview
+            const photoInput = document.getElementById('profilePicInput');
+            if (photoInput) {
+                photoInput.addEventListener('change', function(e) {
+                    if (e.target.files && e.target.files[0]) {
+                        const reader = new FileReader();
+                        const profileImg = document.querySelector('.profile-img');
+                        
+                        reader.onload = function(event) {
+                            profileImg.src = event.target.result;
+                        };
+                        
+                        reader.readAsDataURL(e.target.files[0]);
+                    }
+                });
+            }
+            
+            // Course card hover effects
+            const courseCards = document.querySelectorAll('.course-card');
+            courseCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.boxShadow = '0 10px 25px rgba(0,0,0,0.15)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                    this.style.boxShadow = 'var(--card-shadow)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

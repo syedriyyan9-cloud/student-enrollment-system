@@ -1,0 +1,12 @@
+precedence of operators from highest to lowest in cpp. 
+precedence is the evaluation by deciding which operator should be solved first.
+// hightest is post increament, post decreatment and static_cast
+// then is pre increment, pre decrement, and !(not) and +(positive not addition) and -(negative)
+// then is binary arithematic operators *,/,%
+// then is binary addition and subtraction (+,-)
+// then is insertaion and extraction operators (<<,>>)
+// then is relational operators (<,>,<=,>=)
+// then is other relational operators (==,!=)
+// then is logical operator of &&
+// then is logical operator of ||
+// then is assisgnment operators (=,+=,-=,*=,/=,%=)

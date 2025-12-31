@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Available Courses</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 30px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #3f51b5;
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+        
+        .search-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        #courseSearch {
+            width: 100%;
+            max-width: 500px;
+            padding: 12px 20px;
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        #courseSearch:focus {
+            border-color: #3f51b5;
+            box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.1);
+        }
+        
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .course-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .course-header {
+            background: linear-gradient(135deg, #3f51b5, #5c6bc0);
+            color: white;
+            padding: 20px;
+        }
+        
+        .course-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .course-number {
+            float: right;
+            background: rgba(255,255,255,0.2);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .course-body {
+            padding: 20px;
+        }
+        
+        .course-description {
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .badges-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .teacher-badge {
+            background: #2196f3;
+            color: white;
+        }
+        
+        .credit-badge {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .enroll-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: #3f51b5;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        
+        .enroll-btn:hover {
+            background: #354497;
+        }
+        
+        .success-link {
+            display: block;
+            text-align: center;
+            margin-top: 40px;
+            color: #3f51b5;
+            font-weight: 500;
+            text-decoration: none;
+        }
+        
+        .success-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Available Courses</h1>
+        
+        <div class="search-container">
+            <input type="text" placeholder="Search courses..." id="courseSearch">
+        </div>
+
+        <div class="courses-grid">
+            {% for i in course %}
+            <div class="course-card">
+                <div class="course-header">
+                    <h3 class="course-name">{{ i.c_name }}</h3>
+                    <span class="course-number">#{{ i.c_number }}</span>
+                </div>
+                <div class="course-body">
+                    <p class="course-description">{{ i.c_des }}</p>
+                    <div class="badges-container">
+                        <span class="badge teacher-badge">Teacher: {{ i.c_teacher }}</span>
+                        <span class="badge credit-badge">{{ i.c_credit }} Credits</span>
+                    </div>
+                    <!-- If student is logged in, just pass course number -->
+                    <a href="{% url 'enroll' %}" class="badge credit-badge" style="text-decoration: none;">
+                        Enroll Now
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- <a href="{% url 'success' %}" class="success-link">
+            View your successful enrollments →
+        </a> -->
+    </div>
+
+    <script>
+        // Simple search functionality (visual only)
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('courseSearch');
+            const courseCards = document.querySelectorAll('.course-card');
+            
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                courseCards.forEach(card => {
+                    const courseName = card.querySelector('.course-name').textContent.toLowerCase();
+                    const courseDesc = card.querySelector('.course-description').textContent.toLowerCase();
+                    
+                    if (courseName.includes(searchTerm) || courseDesc.includes(searchTerm)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Add hover effects to cards
+            courseCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.boxShadow = '0 10px 20px rgba(0,0,0,0.1)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                    this.style.boxShadow = '0 3px 10px rgba(0,0,0,0.1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

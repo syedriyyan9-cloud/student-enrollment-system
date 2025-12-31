@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Enrollment Requests</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #3f51b5;
+            margin-bottom: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background-color: #3f51b5;
+            color: white;
+        }
+        
+        tr:hover {
+            background-color: #f5f5ff;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .accept-btn, .reject-btn {
+            padding: 6px 12px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .accept-btn {
+            background-color: #4caf50;
+            color: white;
+        }
+        
+        .accept-btn:hover {
+            background-color: #3e8e41;
+        }
+        
+        .reject-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .reject-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .no-requests {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Enrollment Requests</h1>
+        
+        {% if data %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Email</th>
+                    <th>Course Name</th>
+                    <th>Course Number</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in data %}
+                <tr>
+                    <td>{{ item.student.s_fname }} {{ item.student.s_lname }}</td>
+                    <td>{{ item.student.s_email }}</td>
+                    <td>{{ item.course.c_name }}</td>
+                    <td>{{ item.course.c_number }}</td>
+                    <td>{{ item.enrollment.status }}</td>
+                    <td class="action-buttons">
+                        <form action="{% url 'update_enrollment' item.enrollment.id %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="status" value="A">
+                            <button type="submit" class="accept-btn">Accept</button>
+                        </form>
+                        <form action="{% url 'update_enrollment' item.enrollment.id %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="status" value="R">
+                            <button type="submit" class="reject-btn">Reject</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="no-requests">
+            No pending enrollment requests.
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Simple row hover effect
+        document.querySelectorAll('tr').forEach(row => {
+            row.addEventListener('mouseenter', function() {
+                this.style.backgroundColor = '#f5f5ff';
+            });
+            
+            row.addEventListener('mouseleave', function() {
+                this.style.backgroundColor = '';
+            });
+        });
+    </script>
+</body>
+</html>

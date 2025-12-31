@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #3f51b5;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .dashboard-card {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-top: 5px solid #3f51b5;
+            text-align: center;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .card-icon {
+            font-size: 50px;
+            color: #3f51b5;
+            margin-bottom: 20px;
+        }
+        
+        .card-title {
+            font-size: 24px;
+            color: #3f51b5;
+            margin-bottom: 15px;
+        }
+        
+        .card-count {
+            font-size: 36px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .card-link {
+            display: inline-block;
+            background-color: #3f51b5;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .card-link:hover {
+            background-color: #354497;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Admin Dashboard</h1>
+        
+        <div class="cards-container">
+            <!-- Students Card -->
+            <div class="dashboard-card">
+                <div class="card-icon">👨‍🎓</div>
+                <h2 class="card-title">Students</h2>
+                <div class="card-count">{{ student }}</div>
+                <a href="{% url 'st-admin' %}" class="card-link">View Students</a>
+            </div>
+            
+            <!-- Courses Card -->
+            <div class="dashboard-card">
+                <div class="card-icon">📚</div>
+                <h2 class="card-title">Courses</h2>
+                <div class="card-count">{{ course}}</div>
+                <a href="{% url 'course_list' %}" class="card-link">View Courses</a>
+            </div>
+            
+            <!-- Enrollments Card -->
+            <div class="dashboard-card">
+                <div class="card-icon">📝</div>
+                <h2 class="card-title">Enrollments</h2>
+                <div class="card-count">{{ enroll }}</div>
+                <a href="{% url 'enrollment_requests' %}" class="card-link">View Enrollments</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple hover effect enhancement
+        document.querySelectorAll('.dashboard-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+                this.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = '';
+                this.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+            });
+        });
+    </script>
+</body>
+</html>
