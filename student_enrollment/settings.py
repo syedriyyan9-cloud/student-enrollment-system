@@ -28,7 +28,7 @@ DEBUG = 'RENDER' not in os.environ
 
 ALLOWED_HOSTS = ['*']
 
-SECRET_KEY = 'django-insecure-1234567890abcdef!@#$%'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-local-test-key-123')
 
 
 # Application definition
