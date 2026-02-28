@@ -5,7 +5,7 @@ class student(models.Model):
     s_fname = models.CharField(max_length=30)
     s_lname = models.CharField(max_length=30)
     s_email = models.EmailField(max_length=150, unique=True)
-    s_phone = models.IntegerField(default=0)
+    s_phone = models.BigIntegerField(default=0)
     s_dob = models.DateField()
     s_city = models.CharField(max_length=50)
     s_password = models.CharField(max_length=20)
